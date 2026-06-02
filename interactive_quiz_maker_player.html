@@ -1,0 +1,1297 @@
+<!DOCTYPE html>
+<html lang="ms" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CanvaToApp - 50 Soalan Kebersihan & Keselamatan Makanan</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter & Outfit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome for beautiful icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Canvas Confetti for celebration -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <!-- Tone.js for synthesized sound effects -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        outfit: ['Outfit', 'sans-serif'],
+                    },
+                    colors: {
+                        canvaPurple: '#7d2ae8',
+                        canvaBlue: '#00c4cc',
+                        canvaDark: '#0f172a',
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: radial-gradient(circle at top left, #f5f3ff 0%, #f0fdfa 100%);
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 9999px;
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+        
+        .slide-up {
+            animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .pulse-soft {
+            animation: pulseSoft 2s infinite;
+        }
+
+        @keyframes pulseSoft {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+    </style>
+</head>
+<body class="min-h-full flex flex-col text-slate-800 antialiased overflow-x-hidden">
+
+    <!-- Header / Navbar -->
+    <header class="bg-white/90 backdrop-blur-md border-b border-slate-200/80 sticky top-0 z-50 transition-all shadow-sm">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="navigateTo('home')">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-canvaPurple to-canvaBlue flex items-center justify-center shadow-md text-white font-outfit font-black text-xl">
+                    E
+                </div>
+                <div>
+                    <h1 class="font-outfit font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-canvaPurple to-canvaBlue leading-none text-base sm:text-lg">EHFH 2203</h1>
+                    <span class="text-[10px] sm:text-xs text-slate-500 font-semibold block">Kebersihan & Keselamatan Makanan (50 MCQ)</span>
+                </div>
+            </div>
+            
+            <div class="flex items-center space-x-2">
+                <button onclick="toggleAudio()" id="audioBtn" class="p-2 rounded-full hover:bg-slate-100 text-slate-600 transition-colors focus:outline-none" title="Pasang/Senyap Bunyi">
+                    <i class="fas fa-volume-up text-base"></i>
+                </button>
+                <button onclick="navigateTo('home')" class="px-3 py-1.5 text-xs sm:text-sm font-semibold rounded-xl text-slate-700 hover:bg-slate-100 transition-all flex items-center gap-1">
+                    <i class="fas fa-home"></i> <span class="hidden sm:inline">Utama</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Wrapper -->
+    <main class="flex-grow max-w-5xl w-full mx-auto px-4 py-6 flex flex-col justify-center">
+
+        <!-- SCREEN 1: Home Dashboard / Intro -->
+        <section id="screen-home" class="fade-in space-y-8 py-4">
+            <div class="text-center space-y-4">
+                <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-purple-100 text-purple-700 text-xs font-semibold tracking-wide uppercase shadow-sm">
+                    <i class="fas fa-shield-halved text-teal-500"></i> Aplikasi Interaktif Penguasaan Silibus
+                </div>
+                <h2 class="font-outfit font-extrabold text-3xl sm:text-5xl text-slate-900 leading-tight tracking-tight">
+                    Kuiz Interaktif <br>
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-canvaPurple to-canvaBlue">Keselamatan & Kebersihan Makanan</span>
+                </h2>
+                <p class="text-slate-600 max-w-2xl mx-auto text-sm sm:text-base">
+                    Aplikasi ini mengandungi <strong>50 soalan aneka pilihan (MCQ)</strong> berpandukan topik 1 hingga 14. Lengkap dengan jawapan betul, pemarkahan pintar, kesan bunyi, dan ulasan mendalam bagi setiap soalan.
+                </p>
+            </div>
+
+            <!-- Quiz Settings / Mode Selection -->
+            <div class="max-w-2xl mx-auto bg-white p-6 rounded-3xl border border-slate-100 shadow-xl shadow-slate-100/50 space-y-6">
+                <h3 class="font-outfit font-bold text-lg text-slate-800 border-b pb-3 flex items-center gap-2">
+                    <i class="fas fa-sliders-h text-canvaPurple"></i> Pilih Mod Pembelajaran Anda
+                </h3>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <!-- Study Mode Card -->
+                    <div id="mode-study-card" onclick="setPlayMode('study')" class="cursor-pointer p-4 rounded-2xl border-2 border-canvaPurple bg-purple-50/50 transition-all flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="font-outfit font-bold text-canvaPurple text-base">Mod Belajar</span>
+                                <i class="fas fa-graduation-cap text-canvaPurple text-lg"></i>
+                            </div>
+                            <p class="text-xs text-slate-500 leading-relaxed">
+                                Penerangan jawapan ditunjukkan terus sebaik sahaja anda menjawab. Pilihan terbaik untuk mengulang kaji silibus PDF.
+                            </p>
+                        </div>
+                        <div class="mt-4 flex items-center gap-1.5 text-xs font-bold text-canvaPurple">
+                            <i class="fas fa-check-circle"></i> Dipilih
+                        </div>
+                    </div>
+
+                    <!-- Exam Mode Card -->
+                    <div id="mode-exam-card" onclick="setPlayMode('exam')" class="cursor-pointer p-4 rounded-2xl border-2 border-slate-200 hover:border-slate-300 transition-all flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="font-outfit font-bold text-slate-700 text-base">Mod Peperiksaan</span>
+                                <i class="fas fa-file-signature text-slate-500 text-lg"></i>
+                            </div>
+                            <p class="text-xs text-slate-500 leading-relaxed">
+                                Jawab semua 50 soalan tanpa gangguan. Markah penuh dan ulasan jawapan akan dipaparkan di skrin keputusan akhir sahaja.
+                            </p>
+                        </div>
+                        <div class="mt-4 flex items-center gap-1.5 text-xs font-bold text-slate-400">
+                            <i class="far fa-circle"></i> Klik untuk pilih
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pt-2">
+                    <button onclick="startFullQuiz()" class="w-full py-4 bg-gradient-to-r from-canvaPurple to-canvaBlue text-white font-outfit font-bold rounded-2xl hover:opacity-95 active:scale-[0.99] transition-all flex items-center justify-center gap-2.5 shadow-lg shadow-purple-500/20 text-base">
+                        <i class="fas fa-rocket"></i> Mulakan Cabaran 50 Soalan
+                    </button>
+                </div>
+            </div>
+
+            <!-- Syllabus Coverage Breakdown -->
+            <div class="max-w-2xl mx-auto bg-white/60 backdrop-blur-sm border border-slate-200/50 rounded-2xl p-5 space-y-3">
+                <h4 class="font-outfit font-bold text-xs sm:text-sm text-slate-800 flex items-center gap-2">
+                    <i class="fas fa-book text-teal-600"></i> Silibus & Topik Diuji (Unit 1 - 14):
+                </h4>
+                <div class="grid grid-cols-2 gap-2 text-[11px] sm:text-xs text-slate-600">
+                    <div class="flex items-center gap-1.5"><i class="fas fa-check text-emerald-500 text-[10px]"></i> Pengendalian & Pencemaran Silang</div>
+                    <div class="flex items-center gap-1.5"><i class="fas fa-check text-emerald-500 text-[10px]"></i> Zon Bahaya Suhu (Danger Zone)</div>
+                    <div class="flex items-center gap-1.5"><i class="fas fa-check text-emerald-500 text-[10px]"></i> Agen Bakteria & Toksin Patogen</div>
+                    <div class="flex items-center gap-1.5"><i class="fas fa-check text-emerald-500 text-[10px]"></i> Akta Makanan 1983 & PPKM 2009</div>
+                    <div class="flex items-center gap-1.5"><i class="fas fa-check text-emerald-500 text-[10px]"></i> Pengurusan Stok FIFO & Penyahbekuan</div>
+                    <div class="flex items-center gap-1.5"><i class="fas fa-check text-emerald-500 text-[10px]"></i> Keselamatan Makanan Semasa Banjir</div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- SCREEN 2: Quiz Player Mode -->
+        <section id="screen-player" class="hidden fade-in space-y-6">
+            <!-- Game Progress Dashboard -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                <!-- Progress & Score Status -->
+                <div class="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between col-span-1 md:col-span-2">
+                    <div class="space-y-1">
+                        <div class="flex items-center gap-2">
+                            <span class="px-2.5 py-0.5 rounded-lg bg-teal-50 text-teal-700 text-[10px] sm:text-xs font-bold uppercase tracking-wider" id="play-mode-badge">Mod Belajar</span>
+                            <span id="player-progress-text" class="text-xs text-slate-500 font-bold">Soalan 1 daripada 50</span>
+                        </div>
+                        <div class="w-full w-[200px] sm:w-[300px] h-2.5 bg-slate-100 rounded-full mt-1.5 overflow-hidden">
+                            <div id="player-progress-bar" class="h-full bg-gradient-to-r from-canvaPurple to-canvaBlue transition-all duration-300" style="width: 2%"></div>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-[10px] text-slate-400 font-bold uppercase">Skor Semasa</div>
+                        <div class="font-outfit font-black text-2xl text-canvaPurple"><span id="player-score">0</span><span class="text-slate-300 text-sm font-normal">/50</span></div>
+                    </div>
+                </div>
+
+                <!-- Timer / Statistics Info -->
+                <div class="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-orange-50 text-orange-500 flex items-center justify-center text-lg">
+                            <i class="fas fa-clock animate-pulse"></i>
+                        </div>
+                        <div>
+                            <div class="text-[10px] text-slate-400 font-bold uppercase">Masa Berjalan</div>
+                            <div class="font-outfit font-bold text-base text-slate-800" id="quiz-timer">00:00</div>
+                        </div>
+                    </div>
+                    <!-- Quick Navigator Toggle button -->
+                    <button onclick="toggleNavigatorDrawer()" class="px-3 py-1.5 text-xs bg-slate-50 hover:bg-slate-100 text-slate-600 rounded-xl border border-slate-200 font-semibold transition-all flex items-center gap-1">
+                        <i class="fas fa-th"></i> Grid <span class="hidden sm:inline">Soalan</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Quiz Main layout: Question Card & Question Navigator Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 items-start">
+                
+                <!-- Main Question Area (3/4 Width) -->
+                <div class="lg:col-span-3 space-y-4">
+                    <div class="bg-white rounded-3xl border border-slate-100 shadow-xl shadow-purple-950/5 p-5 sm:p-8 space-y-6 relative overflow-hidden slide-up">
+                        <div class="space-y-2">
+                            <div class="flex justify-between items-center">
+                                <span class="text-[11px] text-purple-600 font-bold tracking-wider uppercase bg-purple-50 px-2 py-0.5 rounded" id="question-topic-label">Topik Kebersihan Makanan</span>
+                                <span class="text-xs text-slate-400 font-medium" id="question-difficulty">Aras: Sederhana</span>
+                            </div>
+                            <h3 id="player-question-text" class="font-outfit font-bold text-lg sm:text-xl text-slate-900 leading-snug">
+                                Loading question text...
+                            </h3>
+                        </div>
+
+                        <!-- Answer Options Container -->
+                        <div id="player-options-container" class="grid grid-cols-1 gap-3.5">
+                            <!-- Injected dynamically -->
+                        </div>
+                    </div>
+
+                    <!-- Feedback / Explanation Area -->
+                    <div id="feedback-area" class="hidden flex flex-col gap-4 p-5 rounded-2xl border transition-all duration-300">
+                        <div class="flex items-start gap-3">
+                            <div id="feedback-icon-box" class="w-10 h-10 rounded-full flex items-center justify-center text-lg text-white font-bold flex-shrink-0">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div class="space-y-1.5">
+                                <h4 id="feedback-title" class="font-outfit font-bold text-base leading-none">Betul!</h4>
+                                <div id="feedback-message" class="text-xs sm:text-sm text-slate-600 leading-relaxed">Penerangan di sini.</div>
+                            </div>
+                        </div>
+                        <div class="flex justify-end pt-2 border-t border-slate-200/50">
+                            <button onclick="nextQuestion()" class="px-5 py-2.5 bg-slate-900 text-white rounded-xl text-xs sm:text-sm font-semibold hover:bg-slate-800 active:scale-95 transition-all flex items-center gap-1.5 shadow-md">
+                                Soalan Seterusnya <i class="fas fa-arrow-right text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Navigation Buttons (Prev/Next) for free movement if they want to skip and return -->
+                    <div class="flex items-center justify-between">
+                        <button onclick="prevQuestion()" id="prev-btn-footer" class="px-4 py-2 text-xs font-semibold rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 active:scale-95 transition-all flex items-center gap-1.5 shadow-sm">
+                            <i class="fas fa-chevron-left text-[10px]"></i> Kembali
+                        </button>
+                        
+                        <button onclick="skipQuestion()" id="skip-btn-footer" class="px-4 py-2 text-xs font-semibold rounded-xl bg-slate-200 hover:bg-slate-300 text-slate-700 active:scale-95 transition-all flex items-center gap-1.5">
+                            Langkau Soalan <i class="fas fa-forward text-[10px]"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Right Sidebar / Desktop Question Grid (1/4 Width) -->
+                <div id="question-navigator-sidebar" class="bg-white p-5 rounded-3xl border border-slate-100 shadow-md space-y-4">
+                    <div class="flex items-center justify-between border-b pb-3">
+                        <h4 class="font-outfit font-bold text-sm text-slate-800 flex items-center gap-1.5">
+                            <i class="fas fa-th-large text-canvaPurple"></i> Peta Navigasi (1-50)
+                        </h4>
+                        <span class="text-[10px] bg-slate-100 px-2 py-0.5 rounded font-bold text-slate-500" id="answered-count">0/50 Jawab</span>
+                    </div>
+
+                    <!-- Grid of 50 dots -->
+                    <div class="grid grid-cols-5 gap-2 max-h-[300px] overflow-y-auto pr-1" id="navigator-grid-container">
+                        <!-- 50 buttons injected dynamically -->
+                    </div>
+
+                    <!-- Grid Legend -->
+                    <div class="pt-3 border-t border-slate-100 grid grid-cols-3 gap-1 text-[9px] text-slate-500 font-semibold text-center">
+                        <div class="flex items-center gap-1 justify-center"><span class="w-2.5 h-2.5 bg-slate-100 rounded-sm inline-block border border-slate-200"></span> Belum</div>
+                        <div class="flex items-center gap-1 justify-center"><span class="w-2.5 h-2.5 bg-emerald-500 rounded-sm inline-block"></span> Betul</div>
+                        <div class="flex items-center gap-1 justify-center"><span class="w-2.5 h-2.5 bg-rose-500 rounded-sm inline-block"></span> Salah</div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+
+        <!-- SCREEN 4: Score/Summary Board -->
+        <section id="screen-score" class="hidden fade-in space-y-8 text-center max-w-2xl mx-auto py-4">
+            <div class="relative inline-block">
+                <!-- Celebration Trophy with glowing background -->
+                <div class="w-28 h-28 sm:w-32 sm:h-32 rounded-full bg-gradient-to-tr from-canvaPurple to-purple-400 flex items-center justify-center text-white text-4xl sm:text-5xl mx-auto shadow-2xl shadow-purple-500/30">
+                    <i class="fas fa-award animate-bounce"></i>
+                </div>
+                <div class="absolute bottom-0 right-1 px-3 py-1 rounded-full bg-cyan-400 text-slate-900 font-bold text-xs shadow-md">
+                    TAMAT CABARAN!
+                </div>
+            </div>
+
+            <div class="space-y-2">
+                <h2 class="font-outfit font-extrabold text-3xl text-slate-900" id="score-header-title">Analisis Keputusan Kuiz</h2>
+                <p id="score-message" class="text-slate-500 text-sm max-w-md mx-auto">Satu pencapaian yang membanggakan bagi menamatkan 50 Soalan MCQ Kebersihan & Keselamatan Makanan!</p>
+            </div>
+
+            <!-- Detailed Stats Cards -->
+            <div class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-100 shadow-xl space-y-6">
+                <div class="grid grid-cols-3 gap-4 divide-x divide-slate-100">
+                    <div class="space-y-1 text-center">
+                        <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">Markah Peratus</span>
+                        <div class="font-outfit font-black text-3xl sm:text-4xl text-canvaPurple" id="score-percentage">0%</div>
+                    </div>
+                    <div class="space-y-1 text-center">
+                        <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">Betul / Jumlah</span>
+                        <div class="font-outfit font-black text-2xl sm:text-3xl text-slate-800" id="score-raw-text">0 / 50</div>
+                    </div>
+                    <div class="space-y-1 text-center">
+                        <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">Jumlah Masa</span>
+                        <div class="font-outfit font-black text-2xl sm:text-3xl text-slate-800" id="score-duration-text">00:00</div>
+                    </div>
+                </div>
+
+                <div class="pt-4 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-2">
+                    <span class="flex items-center gap-1.5"><i class="fas fa-info-circle text-purple-500"></i> Penilaian Taraf Anda: <strong id="score-rank-title" class="text-emerald-600 uppercase">Pakar</strong></span>
+                    <span class="bg-purple-50 text-canvaPurple font-bold px-3 py-1 rounded-full text-[10px]" id="score-mode-label">Mod Belajar</span>
+                </div>
+            </div>
+
+            <!-- Review Section Toggle -->
+            <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-4 text-left">
+                <button onclick="toggleReviewSection()" class="w-full flex items-center justify-between font-outfit font-bold text-slate-800 text-sm focus:outline-none">
+                    <span class="flex items-center gap-2"><i class="fas fa-list-ol text-cyan-500"></i> Semak Semua 50 Jawapan & Ulasan</span>
+                    <i class="fas fa-chevron-down text-slate-400 transition-transform" id="review-chevron"></i>
+                </button>
+                <div id="review-questions-container" class="hidden mt-4 space-y-4 max-h-[400px] overflow-y-auto pr-2 pt-2 border-t border-slate-100 text-xs sm:text-sm">
+                    <!-- Dynamic review items injected here -->
+                </div>
+            </div>
+
+            <!-- Final Screen Buttons -->
+            <div class="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+                <button onclick="restartFullQuiz()" class="flex-1 px-6 py-4.5 bg-gradient-to-r from-canvaPurple to-purple-600 text-white rounded-2xl font-bold hover:opacity-95 active:scale-95 transition-all flex items-center justify-center gap-2 shadow-lg shadow-purple-500/20">
+                    <i class="fas fa-redo"></i> Jawab Sekali Lagi
+                </button>
+                <button onclick="navigateTo('home')" class="px-6 py-4.5 bg-white border border-slate-200 text-slate-700 rounded-2xl font-bold hover:bg-slate-50 active:scale-95 transition-all flex items-center justify-center gap-2 shadow-sm">
+                    <i class="fas fa-home"></i> Kembali ke Menu Utama
+                </button>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Custom Alert/Notification Modal -->
+    <div id="custom-alert" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-950/40 backdrop-blur-sm p-4 transition-all duration-300">
+        <div class="bg-white rounded-3xl p-6 max-w-sm w-full shadow-2xl border border-slate-100 space-y-4 slide-up">
+            <div class="w-12 h-12 rounded-full bg-indigo-50 text-indigo-600 flex items-center justify-center text-xl">
+                <i id="alert-icon" class="fas fa-info-circle"></i>
+            </div>
+            <div class="space-y-1">
+                <h3 id="alert-title" class="font-outfit font-bold text-lg text-slate-900">Mesej Notifikasi</h3>
+                <p id="alert-text" class="text-sm text-slate-500">Kandungan di sini.</p>
+            </div>
+            <button onclick="closeAlert()" class="w-full py-2.5 bg-slate-900 hover:bg-slate-800 text-white font-semibold rounded-xl text-sm transition-colors">
+                Faham
+            </button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 py-6 text-center text-xs mt-auto border-t border-slate-800">
+        <div class="max-w-4xl mx-auto px-4 space-y-2">
+            <p>&copy; 2026 EHFH 2203 Interactive App. Hak Cipta Terpelihara.</p>
+            <p class="text-slate-500 text-[10px]">Aplikasi ini dibina secara interaktif berasaskan rujukan silibus rasmi Malaysia bagi Keselamatan & Kebersihan Makanan.</p>
+        </div>
+    </footer>
+
+    <!-- Script Logic -->
+    <script>
+        // --- SOUND EFFECTS SYNTH (Tone.js) ---
+        let audioEnabled = true;
+        let chimeSynth;
+
+        function initSynth() {
+            if (!chimeSynth) {
+                chimeSynth = new Tone.Synth().toDestination();
+                chimeSynth.set({
+                    oscillator: { type: "sine" },
+                    envelope: { attack: 0.05, decay: 0.5, sustain: 0, release: 0.2 }
+                });
+            }
+        }
+
+        function toggleAudio() {
+            audioEnabled = !audioEnabled;
+            const audioBtn = document.getElementById('audioBtn');
+            if (audioEnabled) {
+                audioBtn.innerHTML = '<i class="fas fa-volume-up text-base"></i>';
+                audioBtn.className = "p-2 rounded-full hover:bg-slate-100 text-slate-600 transition-colors focus:outline-none";
+            } else {
+                audioBtn.innerHTML = '<i class="fas fa-volume-mute text-base animate-pulse"></i>';
+                audioBtn.className = "p-2 rounded-full hover:bg-slate-100 text-red-500 transition-colors focus:outline-none";
+            }
+        }
+
+        function playCorrectSound() {
+            if (!audioEnabled) return;
+            try {
+                initSynth();
+                const now = Tone.now();
+                chimeSynth.triggerAttackRelease("E5", "8n", now);
+                chimeSynth.triggerAttackRelease("G#5", "8n", now + 0.1);
+                chimeSynth.triggerAttackRelease("B5", "4n", now + 0.2);
+            } catch (e) {
+                console.log("Audio play error", e);
+            }
+        }
+
+        function playWrongSound() {
+            if (!audioEnabled) return;
+            try {
+                initSynth();
+                const now = Tone.now();
+                chimeSynth.triggerAttackRelease("F#3", "8n", now);
+                chimeSynth.triggerAttackRelease("C3", "4n", now + 0.12);
+            } catch (e) {
+                console.log("Audio play error", e);
+            }
+        }
+
+        function playCompleteSound() {
+            if (!audioEnabled) return;
+            try {
+                initSynth();
+                const now = Tone.now();
+                chimeSynth.triggerAttackRelease("C4", "8n", now);
+                chimeSynth.triggerAttackRelease("E4", "8n", now + 0.15);
+                chimeSynth.triggerAttackRelease("G4", "8n", now + 0.3);
+                chimeSynth.triggerAttackRelease("C5", "2n", now + 0.45);
+            } catch (e) {
+                console.log("Audio play error", e);
+            }
+        }
+
+        // --- 50 MCQs DATABASE (Syllabus EHFH 2203) ---
+        const QUIZ_DATABASE = [
+            {
+                q: "Antara berikut, yang manakah merupakan takrifan yang paling tepat bagi 'Zon Bahaya Suhu' (Temperature Danger Zone) dalam keselamatan makanan?",
+                options: ["0°C hingga 4°C", "5°C hingga 60°C", "70°C hingga 100°C", "-18°C hingga 0°C"],
+                correct: 1,
+                topic: "Zon Bahaya Suhu",
+                explanation: "Zon Bahaya Suhu adalah antara 5°C hingga 60°C. Dalam julat ini, bakteria patogen membiak secara logaritma (berganda) dengan sangat cepat."
+            },
+            {
+                q: "Berdasarkan kes kematian tragis akibat makan sandwich basi di R&R Perasing, apakah kategori pencemaran utama yang berlaku?",
+                options: ["Pencemaran Fizikal", "Pencemaran Biologi (Mikrobiologi)", "Pencemaran Kimia", "Pencemaran Logam Berat"],
+                correct: 1,
+                topic: "Kes Keracunan Makanan",
+                explanation: "Roti sandwich basi mengandungi pertumbuhan bakteria patogen atau toksin mereka (pencemaran mikrobiologi/biologi) yang boleh menyebabkan kegagalan organ dan maut."
+            },
+            {
+                q: "Apakah nama bakteria patogen yang sering dikaitkan dengan daging ayam mentah dan telur burung ruyung?",
+                options: ["Vibrio cholerae", "Salmonella spp.", "Clostridium botulinum", "Bacillus cereus"],
+                correct: 1,
+                topic: "Bakteria Patogen",
+                explanation: "Salmonella sangat lazim ditemui dalam saluran pencernaan haiwan seperti ayam dan unggas. Ia boleh dimusnahkan dengan memasak ayam hingga suhu dalaman mencapai 74°C."
+            },
+            {
+                q: "Berapakah suhu optimum bagi pembiakan majoriti bakteria mesofilik yang menyebabkan keracunan makanan?",
+                options: ["4°C", "37°C", "75°C", "100°C"],
+                correct: 1,
+                topic: "Biologi Bakteria",
+                explanation: "Suhu 37°C merupakan suhu tubuh manusia dan merupakan suhu optimum paling subur untuk pertumbuhan bakteria patogen membiak."
+            },
+            {
+                q: "Di manakah kedudukan terbaik dan paling selamat untuk menyimpan daging ayam mentah di dalam peti sejuk dingin (chiller)?",
+                options: ["Di rak paling atas bagi memudahkan pengaliran udara", "Di bahagian pintu peti sejuk", "Di rak paling bawah sekali di bawah makanan sedia dimakan", "Di dalam bekas terbuka bersama sayur-sayuran"],
+                correct: 2,
+                topic: "Penyimpanan Chiller",
+                explanation: "Daging mentah mesti diletakkan di rak terbawah sekali bagi mengelakkan air daripada daging mentah menitis ke atas makanan sedia dimakan (pencemaran silang)."
+            },
+            {
+                q: "Apakah yang dimaksudkan dengan kaedah pengurusan stok 'FIFO'?",
+                options: ["First In, First Out (Pertama Masuk, Pertama Keluar)", "Fast Ingredients, Free Options", "Food Inspection for Food Outlets", "First Ice, First Oven"],
+                correct: 0,
+                topic: "Pengurusan Stok",
+                explanation: "FIFO memastikan bahan mentah yang lebih awal disimpan akan digunakan terlebih dahulu untuk mengelakkan tamat tempoh dan pembaziran."
+            },
+            {
+                q: "Berapakah tempoh minimum yang disyorkan oleh Kementerian Kesihatan Malaysia (KKM) untuk mencuci tangan menggunakan sabun?",
+                options: ["5 saat", "10 saat", "20 saat", "60 saat"],
+                correct: 2,
+                topic: "Kebersihan Diri",
+                explanation: "Mencuci tangan dengan gosokan mekanikal menggunakan air bersih dan sabun sekurang-kurangnya 20 saat dapat menyingkirkan sebahagian besar kuman sementara."
+            },
+            {
+                q: "Bagaimanakah situasi 'pencemaran silang' (cross-contamination) boleh terjadi?",
+                options: ["Bahan pencuci tumpah ke dalam periuk sup", "Pengendali makanan memotong daging ayam mentah kemudian terus memotong salad menggunakan papan pemotong yang sama", "Makanan terdedah kepada habuk habas luar", "Makanan disejukbekukan melebihi 3 bulan"],
+                correct: 1,
+                topic: "Pencemaran Silang",
+                explanation: "Menggunakan papan pemotong atau pisau yang sama untuk makanan mentah dan makanan sedia dimakan tanpa disanitasi akan memindahkan kuman secara langsung."
+            },
+            {
+                q: "Apakah jenis bakteria yang menghasilkan toksin tahan haba dan lazimnya berpindah ke makanan daripada luka atau bisul pada kulit pengendali makanan?",
+                options: ["Staphylococcus aureus", "Escherichia coli", "Listeria monocytogenes", "Campylobacter jejuni"],
+                correct: 0,
+                topic: "Bakteria & Manusia",
+                explanation: "Staphylococcus aureus hidup di kulit, hidung, dan luka manusia. Toksin yang dihasilkannya sangat tahan haba dan tidak rosak walaupun dimasak semula."
+            },
+            {
+                q: "Apakah nama suntikan imunisasi/vaksin wajib yang mesti diambil oleh setiap pengendali makanan di Malaysia?",
+                options: ["Vaksin Influenza", "Vaksin Hepatitis B", "Vaksin Tipoid (Typhoid)", "Vaksin BCG"],
+                correct: 2,
+                topic: "Undang-Undang KKM",
+                explanation: "Suntikan vaksin Typhoid mencegah penyebaran bakteria Salmonella typhi yang menyebabkan demam kepialu melalui pengendali makanan."
+            },
+            {
+                q: "Akta utama yang menjadi punca kuasa kawalan keselamatan makanan di Malaysia ialah:",
+                options: ["Akta Makanan 1983", "Akta Kesihatan Awam 1988", "Akta Kerajaan Tempatan 1976", "Akta Perlindungan Pengguna 1999"],
+                correct: 0,
+                topic: "Undang-Undang KKM",
+                explanation: "Akta Makanan 1983 berfungsi melindungi orang ramai terhadap bahaya kesihatan dan penipuan pada penyediaan serta penjualan makanan."
+            },
+            {
+                q: "Peraturan yang memperincikan standard kebersihan premis makanan dan pengendali makanan di bawah Akta Makanan 1983 ialah:",
+                options: ["Peraturan-Peraturan Kebersihan Makanan 2009", "Peraturan Kawalan Mutu Air 1990", "Peraturan Premis Sihat 2012", "Peraturan Kuarantin Makanan 1985"],
+                correct: 0,
+                topic: "Undang-Undang KKM",
+                explanation: "Peraturan-Peraturan Kebersihan Makanan (PPKM) 2009 menetapkan semua keperluan pendaftaran premis, kebersihan, pengendalian, dan latihan pengendali."
+            },
+            {
+                q: "Berapakah suhu standard yang selamat bagi ruang penyimpanan sejuk beku (freezer) makanan?",
+                options: ["0°C hingga 4°C", "-5°C hingga -10°C", "-18°C atau lebih rendah", "-40°C sahaja"],
+                correct: 2,
+                topic: "Suhu Penyimpanan",
+                explanation: "Suhu -18°C mengehentikan (dormant) aktiviti pembiakan bakteria sepenuhnya dan memanjangkan jangka hayat makanan beku."
+            },
+            {
+                q: "Berapakah julat suhu simpanan sejuk yang betul bagi unit peti sejuk dingin (chiller) untuk menyimpan sayur-sayuran?",
+                options: ["0°C hingga 4°C", "5°C hingga 10°C", "11°C hingga 15°C", "Di atas 20°C"],
+                correct: 0,
+                topic: "Suhu Penyimpanan",
+                explanation: "Suhu 0°C hingga 4°C mengekang pertumbuhan bakteria patogen tetapi mengelakkan kerosakan fros pada makanan segar."
+            },
+            {
+                q: "Kehadiran helaian rambut, paku, atau kepingan kaca di dalam hidangan mi goreng dikategorikan sebagai:",
+                options: ["Pencemaran Kimia", "Pencemaran Fizikal", "Pencemaran Biologi", "Pencemaran Semulajadi"],
+                correct: 1,
+                topic: "Kategori Pencemaran",
+                explanation: "Pencemaran fizikal melibatkan apa-apa objek asing/benda keras yang tidak sepatutnya berada dalam makanan dan boleh mencederakan mulut/tekak."
+            },
+            {
+                q: "Sisa racun serangga atau baki bahan pencuci detergen yang tidak dibilas bersih pada pinggan dikategorikan sebagai:",
+                options: ["Pencemaran Fizikal", "Pencemaran Kimia", "Pencemaran Biologi", "Pencemaran Allergen"],
+                correct: 1,
+                topic: "Kategori Pencemaran",
+                explanation: "Pencemaran kimia adalah kontaminasi makanan oleh bahan kimia merbahaya seperti racun makhluk perosak, sisa sabun, atau logam berat."
+            },
+            {
+                q: "Apakah nama sistem pengurusan sistematik berasaskan pencegahan bahaya makanan yang diiktiraf di peringkat antarabangsa?",
+                options: ["ISO 9001", "HACCP (Hazard Analysis Critical Control Point)", "Halal JAKIM", "GMP (Good Manufacturing Practice)"],
+                correct: 1,
+                topic: "Sistem Kualiti",
+                explanation: "HACCP memfokuskan kepada mengenal pasti langkah pencegahan di setiap tahap aliran penyediaan makanan bagi menjamin keselamatan makanan."
+            },
+            {
+                q: "Berapakah suhu dalaman minimum dan tempoh yang selamat semasa memasak daging atau lauk pauk biasa bagi memusnahkan kuman?",
+                options: ["50°C selama 10 minit", "70°C selama sekurang-kurangnya 2 minit", "100°C selama 1 saat", "60°C tanpa had masa"],
+                correct: 1,
+                topic: "Suhu Memasak",
+                explanation: "Memasak makanan sehingga suhu teras dalaman mencapai 70°C selama sekurang-kurangnya 2 minit berkesan membunuh kebanyakan patogen bukan spora."
+            },
+            {
+                q: "Mengapakah makanan panas yang telah dimasak tidak boleh dibiarkan terdedah pada suhu bilik melebihi 4 jam?",
+                options: ["Makanan akan kehilangan nutriennya", "Bakteria patogen akan membiak dengan sangat cepat ke tahap bahaya", "Warna makanan akan bertukar menjadi gelap", "Makanan akan menyerap habuk bilik secara kimia"],
+                correct: 1,
+                topic: "Zon Bahaya Suhu",
+                explanation: "Selepas 4 jam berada dalam Zon Bahaya Suhu, populasi bakteria patogen boleh mencapai had jangkitan yang cukup tinggi untuk menyebabkan keracunan makanan."
+            },
+            {
+                q: "Semasa kejadian banjir besar, apakah risiko terbesar terhadap kebersihan dan keselamatan bahan mentah makanan di premis?",
+                options: ["Makanan menjadi kering", "Pencemaran silang oleh limpahan air banjir yang mengandungi kumbahan dan najis", "Makanan kehabisan gas oksigen", "Suhu persekitaran menjadi terlalu sejuk"],
+                correct: 1,
+                topic: "Pengurusan Banjir",
+                explanation: "Air banjir membawa najis, sisa kumbahan, bahan kimia, dan bakteria patogen yang akan mencemari apa sahaja makanan yang bersentuhan dengannya."
+            },
+            {
+                q: "Apakah tindakan segera yang perlu diambil terhadap makanan basah di dalam peti sejuk sekiranya berlaku bekalan elektrik terputus (blackout)?",
+                options: ["Buka pintu peti sejuk seluas-luasnya untuk pengudaraan", "Pastikan pintu peti sejuk sentiasa tertutup rapat bagi mengekalkan suhu sejuk seberapa lama yang boleh", "Pindahkan semua lauk ke dalam singki", "Garamkan semua makanan basah tersebut"],
+                correct: 1,
+                topic: "Pengurusan Banjir",
+                explanation: "Menutup pintu peti sejuk rapat mengekalkan suhu sejuk di bawah 4°C selama beberapa jam, melambatkan pertumbuhan bakteria semasa tiada bekalan elektrik."
+            },
+            {
+                q: "Sumber air yang digunakan untuk membasuh bahan makanan dan membuat ais minuman mestilah mematuhi standard:",
+                options: ["Standard Air Mentah Sungai", "Standard Air Minum Kebangsaan (Kementerian Kesihatan Malaysia)", "Standard Air Suling Makmal", "Piawaian Air Kolam Renang"],
+                correct: 1,
+                topic: "Keselamatan Air",
+                explanation: "Air yang selamat dan dirawat mengelakkan penularan penyakit bawaan air seperti kolera, tifoid, dan hepatitis A."
+            },
+            {
+                q: "Apakah kaedah yang betul untuk mengeringkan tangan selepas membasuh tangan di premis makanan?",
+                options: ["Menggunakan tisu pakai buang atau pengering angin panas", "Mengelap pada apron yang dipakai", "Menggunakan kain lap dapur yang dikongsi bersama", "Mengibaskan tangan di udara sehingga kering sendiri"],
+                correct: 0,
+                topic: "Kebersihan Diri",
+                explanation: "Menggunakan tisu pakai buang adalah paling bersih. Mengelap pada kain lap berkongsi boleh menyebabkan pencemaran semula tangan."
+            },
+            {
+                q: "Bagaimanakah rupa fizikal isi ayam mentah yang telah mengalami kerosakan mikroorganisma?",
+                options: ["Warna merah jambu cerah dan pejal", "Berbau busuk/hanying, berlendir, dan berwarna pucat atau keabu-abuan", "Kering dan tidak berbau", "Mempunyai bintik-bintik garam"],
+                correct: 1,
+                topic: "Kerosakan Makanan",
+                explanation: "Lendir, perubahan warna ke abu-abu, dan bau masam/hanying adalah bukti nyata pembiakan bakteria pembusuk pada protein daging ayam."
+            },
+            {
+                q: "Mengapakah makanan dalam tin yang kemek teruk, kembung, atau berkarat tidak boleh digunakan atau dijual?",
+                options: ["Kerana ia kelihatan tidak cantik", "Kerana risiko tinggi jangkitan bakteria anaerobik berbahaya Clostridium botulinum", "Kerana berat tin akan berkurangan", "Kerana rasa tin akan meresap ke dalam makanan"],
+                correct: 1,
+                topic: "Kerosakan Makanan",
+                explanation: "Kemek atau karat pada tin boleh mewujudkan liang mikro yang membenarkan spora Clostridium botulinum membiak dalam keadaan tanpa oksigen dan menghasilkan neurotoksin maut."
+            },
+            {
+                q: "Toksin Clostridium botulinum yang boleh menyebabkan lumpuh otot dan maut dikaitkan dengan:",
+                options: ["Daging ayam mentah", "Makanan bertin yang tidak diproses dengan sempurna", "Nasi lemak basi", "Susu segar mentah"],
+                correct: 1,
+                topic: "Bakteria Patogen",
+                explanation: "Clostridium botulinum ialah bakteria anaerobik (tidak memerlukan oksigen) yang membentuk spora tahan lasak dan hidup subur di dalam makanan bertin yang rosak."
+            },
+            {
+                q: "Mengapakah pengendali makanan digalakkan memakai apron berwarna cerah (seperti putih atau kuning muda)?",
+                options: ["Untuk kelihatan bergaya dan menarik perhatian", "Supaya kekotoran dan sisa pencemaran mudah dikesan dan dicuci segera", "Untuk mengurangkan penyerapan haba dapur", "Kerana warna cerah menolak kuman"],
+                correct: 1,
+                topic: "Kebersihan Diri",
+                explanation: "Apron berwarna cerah memastikan pengendali peka terhadap tahap kebersihan pakaian mereka; kotoran dapat dikesan dengan jelas berbanding warna gelap."
+            },
+            {
+                q: "Bagaimanakah pengurusan tong sampah yang betul di kawasan dapur premis makanan?",
+                options: ["Dibiarkan sentiasa terbuka tanpa penutup untuk memudahkan pembuangan", "Mempunyai penutup jenis pedal kaki (tanpa sentuhan tangan) dan dialas dengan beg plastik", "Diletakkan bersebelahan dengan meja penyediaan makanan", "Hanya dibuang seminggu sekali"],
+                correct: 1,
+                topic: "Reka Bentuk Premis",
+                explanation: "Tong sampah berpedal mengelakkan tangan pengendali tercemar kuman selepas membuang sampah, manakala plastik memudahkan pelupusan sisa."
+            },
+            {
+                q: "Apakah punca utama kejadian jangkitan bakteria Vibrio parahaemolyticus?",
+                options: ["Memakan nasi goreng sejuk", "Memakan makanan laut mentah atau separuh masak seperti kerang dan tiram", "Meminum air susu basi", "Memakan roti berlapuk"],
+                correct: 1,
+                topic: "Bakteria Patogen",
+                explanation: "Vibrio parahaemolyticus hidup semulajadi di persekitaran laut dan sering mencemari makanan laut yang tidak dimasak dengan sempurna."
+            },
+            {
+                q: "Antara kaedah berikut, yang manakah merupakan kaedah penyahbekuan (thawing) daging mentah yang paling selamat?",
+                options: ["Merendam daging dalam air panas mendidih", "Meletakkan daging di atas meja pada suhu bilik secara terbuka selama 6 jam", "Memindahkan daging dari freezer ke ruang chiller (peti sejuk dingin) semalaman", "Menjemur daging di bawah cahaya matahari"],
+                correct: 2,
+                topic: "Kaedah Penyahbekuan",
+                explanation: "Menyahbeku dalam chiller memastikan suhu daging sentiasa berada di luar Zon Bahaya Suhu (bawah 4°C), menghalang pembiakan bakteria semasa proses pencairan ais."
+            },
+            {
+                q: "Mengapakah proses penyahbekuan daging pada suhu bilik secara terbuka dianggap tidak selamat?",
+                options: ["Kerana daging akan mengecil", "Kerana bahagian luar daging akan memasuki Zon Bahaya Suhu dan bakteria mula membiak pesat manakala bahagian dalam masih beku", "Kerana daging akan kehilangan rasa asalnya", "Kerana ia memerlukan masa yang terlalu lama"],
+                correct: 1,
+                topic: "Kaedah Penyahbekuan",
+                explanation: "Suhu bilik (kira-kira 28°C-32°C di Malaysia) adalah suhu ideal pembiakan bakteria. Permukaan luar daging yang cair dahulu akan terdedah kepada bahaya ini."
+            },
+            {
+                q: "Berapakah ketinggian minimum yang disyorkan bagi susunan bahan makanan dari atas lantai dapur bagi mengelakkan makhluk perosak?",
+                options: ["Sekurang-kurangnya 5 cm", "Sekurang-kurangnya 15 cm (6 inci) dari lantai", "Mesti rapat dengan lantai untuk mengelakkan jatuh", "Sekurang-kurangnya 1 meter"],
+                correct: 1,
+                topic: "Reka Bentuk Premis",
+                explanation: "Jarak 15 cm memberikan ruang yang cukup untuk pembersihan lantai dan menyukarkan makhluk perosak seperti tikus dan lipas bersarang."
+            },
+            {
+                q: "Berikut merupakan simptom-simptom klasik kejadian keracunan makanan KECUALI:",
+                options: ["Muntah-muntah dan cirit-birit", "Sakit perut dan kekejangan otot abdomen", "Demam dan pening kepala", "Rambut gugur dan kulit menjadi kering"],
+                correct: 3,
+                topic: "Simptom Keracunan",
+                explanation: "Rambut gugur bukan simptom akut keracunan makanan. Simptom biasa melibatkan gangguan sistem pencernaan (gastrointestinal)."
+            },
+            {
+                q: "Toksin Staphylococcus aureus terkenal kerana mempunyai tempoh inkubasi yang sangat pendek. Berapakah tempoh inkubasi biasa sebelum mangsa mula muntah?",
+                options: ["1 hingga 6 jam", "24 hingga 48 jam", "7 hari", "1 bulan"],
+                correct: 0,
+                topic: "Biologi Bakteria",
+                explanation: "Kerana toksin S. aureus sudah sedia terbentuk di dalam makanan, gejala keracunan berlaku sangat pantas (muntah-muntah teruk dalam masa 1-6 jam selepas makan)."
+            },
+            {
+                q: "Antara berikut, yang manakah dikategorikan sebagai 'pencemaran biologi'?",
+                options: ["Habuk, kuku, dan lalat", "Spora kulat, bakteria patogen, dan virus", "Plumbum, raksa, dan racun rumput", "Pewarna tiruan berlebihan"],
+                correct: 1,
+                topic: "Kategori Pencemaran",
+                explanation: "Pencemaran biologi merujuk kepada pencemaran oleh hidupan mikroorganisma hidup seperti bakteria, virus, kulat, protozoa, dan parasit."
+            },
+            {
+                q: "Mengapakah pengendali makanan dilarang sama sekali memakai jam tangan, gelang, atau cincin berhias semasa bekerja?",
+                options: ["Kerana bimbang barang perhiasan tersebut akan hilang", "Kerana barangan tersebut boleh mengumpul kotoran, sukar disanitasi, dan berisiko jatuh ke dalam makanan", "Kerana ia mengganggu pergerakan tangan semasa memasak", "Kerana ia dilarang oleh adat resam"],
+                correct: 1,
+                topic: "Kebersihan Diri",
+                explanation: "Barang perhiasan mempunyai celah-celah yang menakung daki, sabun, dan kuman yang mustahil dibersihkan dengan basuh tangan biasa."
+            },
+            {
+                q: "Apakah cara terbaik untuk mengelakkan lalat (vektor penyakit) daripada menghinggapi makanan sedia dimakan?",
+                options: ["Menyembur racun serangga di atas makanan", "Menutup makanan dengan tudung saji, bekas kedap udara, atau menggunakan perangkap lalat UV", "Sentiasa mengipas makanan dengan tangan", "Meletakkan makanan di dalam air"],
+                correct: 1,
+                topic: "Kawalan Perosak",
+                explanation: "Menggunakan pelindung fizikal (tudung saji/bekas) menghalang lalat secara langsung daripada memindahkan kuman dari tong sampah ke makanan."
+            },
+            {
+                q: "Apakah prinsip amalan 'Clean-As-You-Go' di dapur komersial?",
+                options: ["Hanya mengemas dapur selepas premis ditutup pada waktu malam", "Membersihkan setiap kawasan kerja secara berterusan semasa dan selepas setiap langkah penyediaan makanan", "Membiarkan tukang cuci khas membersihkan sisa masakan", "Membasuh peralatan seminggu sekali"],
+                correct: 1,
+                topic: "Amalan Kebersihan",
+                explanation: "Amalan ini mengurangkan risiko pencemaran silang, mengelakkan kemalangan tergelincir, dan menghalang serangga perosak daripada tertarik kepada sisa makanan."
+            },
+            {
+                q: "Apakah perbezaan utama antara proses 'membersih' (cleaning) dan 'membasmi kuman' (sanitizing)?",
+                options: ["Tiada perbezaan, kedua-duanya adalah sama", "Membersih membuang kotoran fizikal yang kelihatan; membasmi kuman mengurangkan mikroorganisma ke tahap yang selamat menggunakan bahan kimia/haba", "Membasmi kuman hanya menggunakan air kosong tanpa sabun", "Membersih dilakukan sebulan sekali manakala membasmi kuman setiap hari"],
+                correct: 1,
+                topic: "Amalan Kebersihan",
+                explanation: "Pembersihan fizikal (sabun & air) menyingkirkan minyak dan sisa makanan, manakala sanitasi (peluntur/alkohol/haba) membunuh sisa kuman tidak kelihatan."
+            },
+            {
+                q: "Apakah jenis kain lap dapur yang paling disyorkan untuk mengelakkan risiko pencemaran silang?",
+                options: ["Kain lap buruk yang disimpan di tepi singki", "Tisu pakai buang (paper towel) atau kain lap berkod warna yang direndam dalam larutan sanitasi selepas setiap penggunaan", "Apron yang dipakai oleh tukang masak", "Kain tuala mandi lama"],
+                correct: 1,
+                topic: "Amalan Kebersihan",
+                explanation: "Kain berkod warna (cth: biru untuk meja, merah untuk daging mentah) mengelakkan pemindahan kuman antara kawasan berisiko tinggi dan rendah."
+            },
+            {
+                q: "Apakah risiko kesihatan utama jika memakan sayur-sayuran segar seperti ulam yang tidak dibasuh dengan betul?",
+                options: ["Kekurangan vitamin C", "Jangkitan telur cacing, parasit Giardia, atau sisa racun kimia perosak", "Sakit gigi", "Makanan menjadi tawar"],
+                correct: 1,
+                topic: "Kategori Pencemaran",
+                explanation: "Sayuran yang ditanam dekat dengan tanah boleh dicemari telur cacing, parasit daripada najis haiwan, serta sisa racun kimia pertanian."
+            },
+            {
+                q: "Apakah penyakit berjangkit berbahaya yang disebarkan melalui makanan akibat amalan kebersihan tandas yang buruk oleh pengendali makanan?",
+                options: ["Demam Kepialu (Tifoid) dan Hepatitis A", "Diabetes", "Penyakit Kurap", "Batuk Kering (TB)"],
+                correct: 0,
+                topic: "Penyakit Bawaan Makanan",
+                explanation: "Kedua-dua penyakit ini disebarkan melalui laluan fekal-oral (najis ke mulut) apabila pengendali makanan tidak membasuh tangan bersih selepas ke tandas."
+            },
+            {
+                q: "Apakah tindakan undang-undang & etika terbaik sekiranya seorang pengendali makanan mengalami simptom cirit-birit?",
+                options: ["Terus bekerja seperti biasa tetapi memakai sarung tangan", "Dilarang mengendalikan makanan, melaporkan kepada penyelia, dan segera mendapatkan rawatan doktor", "Hanya minum air herba dan terus memotong sayur", "Menukar tugas kepada mencuci pinggan tanpa rawatan perubatan"],
+                correct: 1,
+                topic: "Kebersihan Diri",
+                explanation: "Di bawah PPKM 2009, pengendali makanan yang sakit atau mengalami cirit-birit dilarang mengendalikan makanan kerana berisiko tinggi mencemari makanan secara besar-besaran."
+            },
+            {
+                q: "Apakah peranan utama alat 'perangkap minyak' (grease trap) di singki premis makanan?",
+                options: ["Menapis sisa tulang makanan", "Menapis minyak dan lemak daripada memasuki sistem saliran awam untuk mengelakkan sumbatan dan bau busuk", "Menghasilkan minyak masak kitar semula secara automatik", "Membunuh bakteria di dalam air sisa"],
+                correct: 1,
+                topic: "Reka Bentuk Premis",
+                explanation: "Perangkap minyak menapis lemak beku daripada memasuki parit utama, mengekang pencemaran alam sekitar serta mencegah pembiakan tikus di kawasan saliran."
+            },
+            {
+                q: "Mengapakah ais untuk minuman dilarang sama sekali diambil menggunakan cawan kaca atau tangan kosong?",
+                options: ["Kerana cawan kaca lambat sejuk", "Kerana kaca boleh pecah di dalam bekas ais dan tangan boleh memindahkan bakteria patogen ke dalam ais bersih", "Kerana ais akan cepat mencair", "Kerana ais akan menjadi tawar"],
+                correct: 1,
+                topic: "Amalan Kebersihan",
+                explanation: "Menggunakan penyeduk khas (scoop) plastik atau keluli menghalang pemindahan kuman dari kulit tangan dan mengelakkan bahaya serpihan kaca."
+            },
+            {
+                q: "Di bawah Peraturan Kebersihan Makanan 2009, semua pengendali makanan di Malaysia wajib menghadiri latihan apa?",
+                options: ["Kursus Pertolongan Cemas", "Kursus Latihan Pengendali Makanan (LPM) yang diiktiraf oleh KKM", "Kursus Pengurusan Kewangan Perniagaan", "Kursus Seni Kulinari Antarabangsa"],
+                correct: 1,
+                topic: "Undang-Undang KKM",
+                explanation: "Kursus LPM diiktiraf KKM adalah wajib seumur hidup bagi mendedahkan pengendali makanan kepada asas sanitasi, keselamatan, dan undang-undang makanan."
+            },
+            {
+                q: "Berapakah suhu penyimpanan yang betul bagi buah-buahan dan sayur-sayuran sensitif fros di dalam bilik sejuk?",
+                options: ["-18°C", "7°C hingga 10°C", "25°C hingga 30°C", "0°C hingga 2°C"],
+                correct: 1,
+                topic: "Suhu Penyimpanan",
+                explanation: "Suhu 7°C hingga 10°C melambatkan pembusukan tanpa menyebabkan kerosakan fisiologi (chilling injury) kepada struktur buah dan sayur."
+            },
+            {
+                q: "Mengapakah produk susu segar Pasteur yang telah dibuka penutupnya wajib disimpan dalam chiller dan dihabiskan dalam 3 hari?",
+                options: ["Kerana warnanya akan pudar", "Kerana susu segar mempunyai kandungan nutrien tinggi yang menjadi medium subur pertumbuhan bakteria selepas terdedah udara", "Kerana susu akan bertukar menjadi air masin", "Kerana susu akan kehilangan gas karbon dioksida"],
+                correct: 1,
+                topic: "Biologi Bakteria",
+                explanation: "Susu kaya dengan laktosa, protein, dan air yang merupakan 'syurga' pembiakan bagi kuman jika tidak disimpan sejuk atau dibiarkan terlalu lama."
+            },
+            {
+                q: "Apakah bahaya utama menggunakan kertas surat khabar lama untuk membungkus makanan panas (seperti pisang goreng) secara langsung?",
+                options: ["Makanan akan berbau dakwat sahaja", "Dakwat surat khabar mengandungi logam berat Plumbum (lead) yang boleh meresap masuk ke dalam makanan yang berminyak/panas", "Makanan akan cepat menjadi sejuk", "Kertas surat khabar akan koyak"],
+                correct: 1,
+                topic: "Pencemaran Kimia",
+                explanation: "Dakwat percetakan mengandungi bahan kimia plumbum yang toksik. Apabila terkena makanan panas atau berminyak, ia boleh larut dan meracuni tubuh secara kronik."
+            },
+            {
+                q: "Apakah tindakan sewajarnya yang perlu anda ambil sebagai pengguna jika mendapati sebuah restoran menghidangkan makanan yang basi atau kotor?",
+                options: ["Membiarkan sahaja kerana malas mencari masalah", "Membuat aduan rasmi kepada Unit Keselamatan dan Kualiti Makanan di Pejabat Kesihatan Daerah (PKD) terdekat", "Membuang makanan tersebut ke atas lantai kedai", "Menyebarkan fitnah tanpa bukti di media sosial tanpa membuat aduan rasmi"],
+                correct: 1,
+                topic: "Kesedaran Pengguna",
+                explanation: "Membuat aduan rasmi membolehkan Pegawai Kesihatan (Inspector) membuat pemeriksaan premis secara sah, mengeluarkan komposit, atau menutup premis di bawah Seksyen 11 Akta Makanan 1983."
+            }
+        ];
+
+        // --- APP STATE ---
+        let currentMode = 'study'; // 'study' or 'exam'
+        let answeredQuestions = Array(50).fill(null); // stores { userChoice, isCorrect } or null
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let isAnsweringActive = true;
+        let timerInterval = null;
+        let secondsElapsed = 0;
+
+        // Navigation
+        function navigateTo(screenId) {
+            document.querySelectorAll('main > section').forEach(screen => {
+                screen.classList.add('hidden');
+            });
+            document.getElementById(`screen-${screenId}`).classList.remove('hidden');
+            
+            if (screenId === 'player') {
+                startTimer();
+            } else {
+                stopTimer();
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Custom Notification Modal
+        function showAlert(title, message, iconClass = "fa-info-circle") {
+            document.getElementById('alert-title').innerText = title;
+            document.getElementById('alert-text').innerText = message;
+            document.getElementById('alert-icon').className = `fas ${iconClass}`;
+            document.getElementById('custom-alert').classList.remove('hidden');
+        }
+
+        function closeAlert() {
+            document.getElementById('custom-alert').classList.add('hidden');
+        }
+
+        // Timer control
+        function startTimer() {
+            if (timerInterval) clearInterval(timerInterval);
+            secondsElapsed = 0;
+            updateTimerDisplay();
+            timerInterval = setInterval(() => {
+                secondsElapsed++;
+                updateTimerDisplay();
+            }, 1000);
+        }
+
+        function stopTimer() {
+            if (timerInterval) clearInterval(timerInterval);
+        }
+
+        function updateTimerDisplay() {
+            const mins = Math.floor(secondsElapsed / 60).toString().padStart(2, '0');
+            const secs = (secondsElapsed % 60).toString().padStart(2, '0');
+            document.getElementById('quiz-timer').innerText = `${mins}:${secs}`;
+        }
+
+        // Setup Modes
+        function setPlayMode(mode) {
+            currentMode = mode;
+            const studyCard = document.getElementById('mode-study-card');
+            const examCard = document.getElementById('mode-exam-card');
+            
+            if (mode === 'study') {
+                studyCard.className = "cursor-pointer p-4 rounded-2xl border-2 border-canvaPurple bg-purple-50/50 transition-all flex flex-col justify-between";
+                studyCard.querySelector('.font-bold').className = "font-outfit font-bold text-canvaPurple text-base";
+                studyCard.querySelector('i').className = "fas fa-graduation-cap text-canvaPurple text-lg";
+                studyCard.querySelector('.mt-4').innerHTML = '<i class="fas fa-check-circle"></i> Dipilih';
+                studyCard.querySelector('.mt-4').className = "mt-4 flex items-center gap-1.5 text-xs font-bold text-canvaPurple";
+
+                examCard.className = "cursor-pointer p-4 rounded-2xl border-2 border-slate-200 hover:border-slate-300 transition-all flex flex-col justify-between";
+                examCard.querySelector('.font-bold').className = "font-outfit font-bold text-slate-700 text-base";
+                examCard.querySelector('i').className = "fas fa-file-signature text-slate-500 text-lg";
+                examCard.querySelector('.mt-4').innerHTML = '<i class="far fa-circle"></i> Klik untuk pilih';
+                examCard.querySelector('.mt-4').className = "mt-4 flex items-center gap-1.5 text-xs font-bold text-slate-400";
+            } else {
+                examCard.className = "cursor-pointer p-4 rounded-2xl border-2 border-canvaPurple bg-purple-50/50 transition-all flex flex-col justify-between";
+                examCard.querySelector('.font-bold').className = "font-outfit font-bold text-canvaPurple text-base";
+                examCard.querySelector('i').className = "fas fa-file-signature text-canvaPurple text-lg";
+                examCard.querySelector('.mt-4').innerHTML = '<i class="fas fa-check-circle"></i> Dipilih';
+                examCard.querySelector('.mt-4').className = "mt-4 flex items-center gap-1.5 text-xs font-bold text-canvaPurple";
+
+                studyCard.className = "cursor-pointer p-4 rounded-2xl border-2 border-slate-200 hover:border-slate-300 transition-all flex flex-col justify-between";
+                studyCard.querySelector('.font-bold').className = "font-outfit font-bold text-slate-700 text-base";
+                studyCard.querySelector('i').className = "fas fa-graduation-cap text-slate-500 text-lg";
+                studyCard.querySelector('.mt-4').innerHTML = '<i class="far fa-circle"></i> Klik untuk pilih';
+                studyCard.querySelector('.mt-4').className = "mt-4 flex items-center gap-1.5 text-xs font-bold text-slate-400";
+            }
+        }
+
+        // Initialize/Start Quiz
+        function startFullQuiz() {
+            currentQuestionIndex = 0;
+            score = 0;
+            answeredQuestions = Array(50).fill(null);
+            
+            document.getElementById('play-mode-badge').innerText = currentMode === 'study' ? 'Mod Belajar' : 'Mod Peperiksaan';
+            document.getElementById('play-mode-badge').className = currentMode === 'study' ? 
+                'px-2.5 py-0.5 rounded-lg bg-purple-50 text-canvaPurple text-[10px] sm:text-xs font-bold uppercase tracking-wider' :
+                'px-2.5 py-0.5 rounded-lg bg-orange-50 text-orange-700 text-[10px] sm:text-xs font-bold uppercase tracking-wider';
+
+            buildNavigatorGrid();
+            loadQuestion(currentQuestionIndex);
+            navigateTo('player');
+        }
+
+        function restartFullQuiz() {
+            startFullQuiz();
+        }
+
+        // Build 50 Question Sidebar
+        function buildNavigatorGrid() {
+            const container = document.getElementById('navigator-grid-container');
+            container.innerHTML = '';
+            for (let i = 0; i < 50; i++) {
+                const btn = document.createElement('button');
+                btn.id = `nav-btn-${i}`;
+                btn.type = 'button';
+                btn.className = "w-10 h-10 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 text-xs font-bold flex items-center justify-center transition-all";
+                btn.innerText = i + 1;
+                btn.setAttribute('onclick', `jumpToQuestion(${i})`);
+                container.appendChild(btn);
+            }
+            updateNavigatorUI();
+        }
+
+        function updateNavigatorUI() {
+            let answeredCount = 0;
+            for (let i = 0; i < 50; i++) {
+                const btn = document.getElementById(`nav-btn-${i}`);
+                if (!btn) continue;
+
+                // Reset class
+                btn.className = "w-10 h-10 rounded-xl text-xs font-bold flex items-center justify-center transition-all border";
+
+                if (i === currentQuestionIndex) {
+                    btn.classList.add("ring-2", "ring-offset-2", "ring-canvaPurple");
+                }
+
+                const state = answeredQuestions[i];
+                if (state !== null) {
+                    answeredCount++;
+                    if (state.isCorrect) {
+                        btn.classList.add("bg-emerald-500", "text-white", "border-emerald-600");
+                    } else {
+                        btn.classList.add("bg-rose-500", "text-white", "border-rose-600");
+                    }
+                } else {
+                    btn.classList.add("bg-slate-50", "text-slate-700", "border-slate-200", "hover:bg-slate-100");
+                }
+            }
+            document.getElementById('answered-count').innerText = `${answeredCount}/50 Jawab`;
+            document.getElementById('player-score').innerText = score;
+        }
+
+        function jumpToQuestion(index) {
+            currentQuestionIndex = index;
+            loadQuestion(currentQuestionIndex);
+        }
+
+        // Render current question
+        function loadQuestion(index) {
+            // Hide feedback area by default
+            document.getElementById('feedback-area').classList.add('hidden');
+            
+            // Adjust header counts
+            document.getElementById('player-progress-text').innerText = `Soalan ${index + 1} daripada 50`;
+            const progressPercentage = ((index + 1) / 50) * 100;
+            document.getElementById('player-progress-bar').style.width = `${progressPercentage}%`;
+
+            const qData = QUIZ_DATABASE[index];
+            document.getElementById('player-question-text').innerText = qData.q;
+            document.getElementById('question-topic-label').innerText = qData.topic;
+
+            // Generate options HTML
+            const optionsContainer = document.getElementById('player-options-container');
+            optionsContainer.innerHTML = '';
+
+            const previousState = answeredQuestions[index];
+            isAnsweringActive = (previousState === null);
+
+            qData.options.forEach((option, optIdx) => {
+                const button = document.createElement('button');
+                button.type = "button";
+                button.className = "group w-full text-left p-4 rounded-xl border border-slate-200 bg-white hover:border-canvaPurple hover:bg-purple-50/50 transition-all flex items-center justify-between text-xs sm:text-sm font-medium shadow-sm active:scale-[0.99]";
+                
+                if (isAnsweringActive) {
+                    button.setAttribute('onclick', `selectOption(${optIdx})`);
+                } else {
+                    button.classList.add('cursor-default');
+                }
+
+                // Default structure
+                button.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <span class="w-7 h-7 rounded-lg bg-slate-100 group-hover:bg-purple-100 group-hover:text-canvaPurple flex items-center justify-center font-bold text-slate-500 text-xs border border-slate-200 transition-colors">
+                            ${String.fromCharCode(65 + optIdx)}
+                        </span>
+                        <span class="text-slate-800 flex-1 leading-snug">${escapeHTML(option)}</span>
+                    </div>
+                    <div class="w-4 h-4 rounded-full border border-slate-300 flex items-center justify-center flex-shrink-0">
+                        <div class="w-2 h-2 rounded-full bg-transparent"></div>
+                    </div>
+                `;
+
+                // If previously answered, show historical colors immediately
+                if (previousState !== null) {
+                    const indicatorCircle = button.querySelector('.rounded-full');
+                    const innerDot = indicatorCircle.querySelector('div');
+
+                    if (optIdx === qData.correct) {
+                        button.classList.add('border-emerald-500', 'bg-emerald-50');
+                        indicatorCircle.classList.add('border-emerald-500', 'bg-emerald-500');
+                        innerDot.classList.add('bg-white');
+                    } else if (optIdx === previousState.userChoice) {
+                        button.classList.add('border-rose-500', 'bg-rose-50');
+                        indicatorCircle.classList.add('border-rose-500', 'bg-rose-500');
+                        innerDot.classList.add('bg-white');
+                    }
+                }
+
+                optionsContainer.appendChild(button);
+            });
+
+            // If previously answered, or in study mode and already answered, show the explanation
+            if (previousState !== null && currentMode === 'study') {
+                showFeedbackPanel(previousState.isCorrect, qData.explanation);
+            }
+
+            // Adjust navigation buttons states
+            document.getElementById('prev-btn-footer').disabled = (index === 0);
+            document.getElementById('prev-btn-footer').style.opacity = (index === 0) ? '0.5' : '1';
+
+            updateNavigatorUI();
+        }
+
+        // Handle Choice Selection
+        function selectOption(selectedIndex) {
+            if (!isAnsweringActive) return;
+            isAnsweringActive = false;
+
+            const qData = QUIZ_DATABASE[currentQuestionIndex];
+            const isCorrect = (selectedIndex === qData.correct);
+
+            // Record State
+            answeredQuestions[currentQuestionIndex] = {
+                userChoice: selectedIndex,
+                isCorrect: isCorrect
+            };
+
+            if (isCorrect) {
+                score++;
+                playCorrectSound();
+            } else {
+                playWrongSound();
+            }
+
+            // Colorize the buttons
+            const optionsContainer = document.getElementById('player-options-container');
+            const optionButtons = optionsContainer.children;
+
+            for (let i = 0; i < optionButtons.length; i++) {
+                const btn = optionButtons[i];
+                btn.removeAttribute('onclick'); // block further clicks
+                btn.classList.add('cursor-default');
+
+                const indicatorCircle = btn.querySelector('.rounded-full');
+                const innerDot = indicatorCircle.querySelector('div');
+
+                if (i === qData.correct) {
+                    btn.classList.add('border-emerald-500', 'bg-emerald-50');
+                    indicatorCircle.classList.add('border-emerald-500', 'bg-emerald-500');
+                    innerDot.classList.add('bg-white');
+                } else if (i === selectedIndex) {
+                    btn.classList.add('border-rose-500', 'bg-rose-50');
+                    indicatorCircle.classList.add('border-rose-500', 'bg-rose-500');
+                    innerDot.classList.add('bg-white');
+                }
+            }
+
+            updateNavigatorUI();
+
+            // Behavior based on mode
+            if (currentMode === 'study') {
+                // Show instant explanation
+                showFeedbackPanel(isCorrect, qData.explanation);
+            } else {
+                // In Exam mode, auto advance after 1 second to make it fast & seamless
+                setTimeout(() => {
+                    nextQuestion();
+                }, 1000);
+            }
+        }
+
+        function showFeedbackPanel(isCorrect, explanationText) {
+            const feedbackArea = document.getElementById('feedback-area');
+            const feedbackIconBox = document.getElementById('feedback-icon-box');
+            const feedbackTitle = document.getElementById('feedback-title');
+            const feedbackMessage = document.getElementById('feedback-message');
+
+            if (isCorrect) {
+                feedbackArea.className = "flex flex-col gap-3 p-5 rounded-2xl border border-emerald-200 bg-emerald-50/80 slide-up";
+                feedbackIconBox.className = "w-10 h-10 rounded-full flex items-center justify-center text-lg text-white bg-emerald-500 font-bold flex-shrink-0";
+                feedbackIconBox.innerHTML = '<i class="fas fa-check"></i>';
+                feedbackTitle.innerText = "Sangat Bagus! Jawapan Anda Betul";
+                feedbackTitle.className = "font-outfit font-bold text-base leading-none text-emerald-800";
+            } else {
+                feedbackArea.className = "flex flex-col gap-3 p-5 rounded-2xl border border-rose-200 bg-rose-50/80 slide-up";
+                feedbackIconBox.className = "w-10 h-10 rounded-full flex items-center justify-center text-lg text-white bg-rose-500 font-bold flex-shrink-0";
+                feedbackIconBox.innerHTML = '<i class="fas fa-times"></i>';
+                feedbackTitle.innerText = "Kurang Tepat!";
+                feedbackTitle.className = "font-outfit font-bold text-base leading-none text-rose-800";
+            }
+
+            feedbackMessage.innerText = explanationText || "Rujuk fail silibus bagi pemahaman terperinci.";
+            feedbackArea.classList.remove('hidden');
+
+            // Scroll feedback into view on small screens
+            setTimeout(() => {
+                feedbackArea.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }, 100);
+        }
+
+        // Navigation actions
+        function prevQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                loadQuestion(currentQuestionIndex);
+            }
+        }
+
+        function nextQuestion() {
+            if (currentQuestionIndex < 49) {
+                currentQuestionIndex++;
+                loadQuestion(currentQuestionIndex);
+            } else {
+                // End of all 50 questions
+                evaluateFinalResults();
+            }
+        }
+
+        function skipQuestion() {
+            nextQuestion();
+        }
+
+        // Final score calculation
+        function evaluateFinalResults() {
+            stopTimer();
+            playCompleteSound();
+
+            // Burst confetti!
+            confetti({
+                particleCount: 150,
+                spread: 100,
+                origin: { y: 0.6 },
+                colors: ['#7d2ae8', '#00c4cc', '#ffd700']
+            });
+
+            // Count unanswered
+            let answeredCount = 0;
+            answeredQuestions.forEach(q => { if (q !== null) answeredCount++; });
+
+            const percentage = Math.round((score / 50) * 100);
+            
+            document.getElementById('score-percentage').innerText = `${percentage}%`;
+            document.getElementById('score-raw-text').innerText = `${score} / 50`;
+            
+            // Format Duration
+            const mins = Math.floor(secondsElapsed / 60).toString().padStart(2, '0');
+            const secs = (secondsElapsed % 60).toString().padStart(2, '0');
+            document.getElementById('score-duration-text').innerText = `${mins}:${secs}`;
+
+            document.getElementById('score-mode-label').innerText = currentMode === 'study' ? 'Mod Belajar' : 'Mod Peperiksaan';
+
+            const scoreMsg = document.getElementById('score-message');
+            const rankTitle = document.getElementById('score-rank-title');
+            const scoreHeader = document.getElementById('score-header-title');
+
+            if (percentage >= 90) {
+                scoreHeader.innerText = "Luar Biasa, Anda Hebat!";
+                scoreMsg.innerText = "Anda telah menguasai silibus Kebersihan & Keselamatan Makanan secara profesional. Sedia untuk peperiksaan akhir!";
+                rankTitle.innerText = "Jaguh Minda / Pakar Utama";
+                rankTitle.className = "font-black text-emerald-600 tracking-wider";
+            } else if (percentage >= 70) {
+                scoreHeader.innerText = "Keputusan Cemerlang!";
+                scoreMsg.innerText = "Tingkatkan sedikit lagi fokus untuk mengelakkan pencemaran halus. Anda berada di laluan yang sangat tepat.";
+                rankTitle.innerText = "Kompeteri Tinggi / Pakar";
+                rankTitle.className = "font-bold text-purple-600";
+            } else if (percentage >= 50) {
+                scoreHeader.innerText = "Tahniah, Anda Lulus!";
+                scoreMsg.innerText = "Masih terdapat beberapa konsep silibus penting yang perlu anda ulangi bagi mengelakkan insiden kritikal di lapangan.";
+                rankTitle.innerText = "Pelatih Sederhana";
+                rankTitle.className = "font-bold text-amber-600";
+            } else {
+                scoreHeader.innerText = "Perlukan Lebih Latihan";
+                scoreMsg.innerText = "Sila rujuk semula bahan silibus PDF anda. Keselamatan makanan amat kritikal untuk menyelamatkan nyawa!";
+                rankTitle.innerText = "Pelatih Asas (Gagal)";
+                rankTitle.className = "font-bold text-rose-600 animate-pulse";
+            }
+
+            buildReviewSection();
+            navigateTo('score');
+        }
+
+        // Build expandable detailed list for 50 answers review
+        function buildReviewSection() {
+            const container = document.getElementById('review-questions-container');
+            container.innerHTML = '';
+
+            QUIZ_DATABASE.forEach((qItem, idx) => {
+                const userAns = answeredQuestions[idx];
+                const isCorrect = userAns ? userAns.isCorrect : false;
+                
+                const itemDiv = document.createElement('div');
+                itemDiv.className = `p-4.5 rounded-xl border-l-4 text-xs sm:text-sm space-y-2 ${isCorrect ? 'bg-emerald-50/50 border-emerald-500' : 'bg-rose-50/50 border-rose-500'}`;
+                
+                let userChoiceText = "Tiada jawapan";
+                if (userAns && userAns.userChoice !== undefined) {
+                    userChoiceText = qItem.options[userAns.userChoice];
+                }
+
+                itemDiv.innerHTML = `
+                    <div class="flex items-center justify-between">
+                        <strong class="text-slate-900 font-outfit">Soalan ${idx + 1}: ${qItem.topic}</strong>
+                        <span class="px-2 py-0.5 rounded text-[10px] font-bold ${isCorrect ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'}">
+                            ${isCorrect ? 'BETUL' : 'SALAH'}
+                        </span>
+                    </div>
+                    <p class="text-slate-700 font-medium">${qItem.q}</p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-1 text-[11px] text-slate-500 pt-1">
+                        <div><span class="font-bold">Jawapan Anda:</span> <span class="${isCorrect ? 'text-emerald-700 font-semibold' : 'text-rose-700 font-semibold'}">${escapeHTML(userChoiceText)}</span></div>
+                        <div><span class="font-bold">Jawapan Sebenar:</span> <span class="text-emerald-800 font-semibold">${escapeHTML(qItem.options[qItem.correct])}</span></div>
+                    </div>
+                    <p class="text-[11px] text-slate-500 italic bg-white p-2 rounded border border-slate-200/50 mt-1.5 leading-relaxed">
+                        <strong>Ulasan:</strong> ${qItem.explanation}
+                    </p>
+                `;
+                container.appendChild(itemDiv);
+            });
+        }
+
+        function toggleReviewSection() {
+            const container = document.getElementById('review-questions-container');
+            const chevron = document.getElementById('review-chevron');
+            if (container.classList.contains('hidden')) {
+                container.classList.remove('hidden');
+                chevron.classList.add('rotate-180');
+            } else {
+                container.classList.add('hidden');
+                chevron.classList.remove('rotate-180');
+            }
+        }
+
+        function toggleNavigatorDrawer() {
+            // For desktop, it is already on the right. 
+            // On mobile devices, we scroll smoothly to the navigator grid for convenience.
+            const grid = document.getElementById('question-navigator-sidebar');
+            grid.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function escapeHTML(str) {
+            if (!str) return '';
+            return str
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        // --- WINDOW BOOTLOADER ---
+        window.onload = function() {
+            // Initialize on launch screen
+            navigateTo('home');
+        }
+    </script>
+</body>
+</html>
